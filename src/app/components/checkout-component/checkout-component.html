@@ -1,0 +1,48 @@
+<div class="checkout-page">
+    <div class="bg-grid"></div>
+    <div class="bg-glow"></div>
+
+    <header class="page-header">
+        <div class="header-inner">
+            <div class="logo-mark">◈</div>
+            <div class="header-text">
+                <div class="header-topping">Checkout · Ingresso VIP</div>
+                <h1 class="header-title">Confirme seu pedido</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="checkout-content">
+        <app-ticket-item-component [eventName]="'Angular Conf 2026'" [(qtd)]="qtd" (cancel)="onCancel()" (couponVal)="AplicarDesconto($event)"></app-ticket-item-component>
+
+        <div class="summary-pannel">
+            <div class="status-row" [class.status-alert]="ehCancelado()">
+                <span class="status-dot" [class.dot-alert]="ehCancelado()"></span>
+                <span class="status-text">{{ Status() }}</span>
+            </div>
+        </div>
+
+        <div class="summary-divider"></div>
+
+        <div class="summary-row">
+            <span class="summary-label">Ingressos</span>
+            <span class="summary-detail">{{ qtd() }} × R$ 150,00</span>
+        </div>
+
+        <div class="summary-total-row">
+            <span class="summary-total-label">Total</span>
+            <span class="summary-total-value">
+              R$ {{ (qtd() * 150-desconto()).toFixed(2).replace('.', ',') }} 
+              @if(desconto()>0){
+                (desconto de: R$ {{desconto().toFixed(2).replace('.', ',')}})
+              }
+            </span>
+        </div>
+
+        <button class="checkout-btn" [disabled]="ehCancelado()">
+            <span>{{ ehCancelado() ? 'Compra cancelada' : 'Finalizar compra' }}</span>
+            <span class="btn-arrow">{{ ehCancelado() ? '✕' : '→' }}</span>
+        </button>
+        
+    </main>
+</div>

@@ -1,0 +1,43 @@
+<div class="ticket-card">
+
+    <div class="ticket-header">
+        <div class="ticket-type-badge">
+            VIP
+        </div>
+        <h2 class="ticket-event-name">{{ eventName() }}</h2>
+        <p class="ticket-subtitle">Ingresso Individual</p>
+    </div>
+
+    <div class="ticket-divider">
+        <div class="hole hole-left"></div>
+        <div class="dashed-line"></div>
+        <div class="hole hole-right"></div>
+    </div>
+
+    <div class="ticket-body">
+
+        <div class="price-section">
+            <span class="price-label">Valor unitário</span>
+            <div class="price-value">R$ 150,00</div>
+        </div>
+        <div class="quantity-section">
+            <span class="quantity-label">Quantidade</span>
+            <div class="quantity-controls">
+                <button class="qtd-btn qtd-minus" (click)="SubtrairIngresso()" [disabled]="qtd() <= 1">-</button>
+                <button class="qtd-btn qtd-minus" (click)="AdicionarIngresso()">+</button>
+            </div>
+        </div>
+
+        <div class="coupon-section">
+            <label for="coupon-input" class="coupon-label">Cupom de desconto</label>
+            <div class="coupon-input-wrapper">
+                <input id="coupon-input" type="text" class="coupon-input" (keydown.enter)="UsarCupom($event)">
+            </div>
+        </div>
+
+                <button class="cancel-btn" (click)="Cancelar()">
+                    <span class="cancel-icon">✕</span>
+                    Solicitar Cancelamento
+                </button>
+    </div>
+</div>
