@@ -3,18 +3,9 @@ import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { Ingresso } from '../../interfaces/ingresso';
 import { ResumoPipePipe } from '../../pipes/resumo-pipe-pipe';
 import { CardComponent } from '../card-component/card-component';
-
-const PRECOS: Record<string, number> = {
-  VIP: 150,
-  STANDARD: 100,
-  MEIA: 50,
-};
-
-const DESCRICOES: Record<string, string> = {
-  VIP: 'Acesso completo a todos os palcos, área VIP exclusiva, coffee break premium, kit de boas-vindas e networking com palestrantes renomados.',
-  STANDARD: 'Acesso ao palco principal e secundário, coffee break incluso e certificado de participação digital.',
-  MEIA: 'Benefício para estudantes e professores. Apresentação de carteirinha válida obrigatória na entrada do evento.',
-};
+import { DESCRICOES } from '../../constantes/descs';
+import { PRECOS } from '../../constantes/precos';
+import { mockIngressos } from '../../constantes/mock';
 
 @Component({
   selector: 'app-checkout-component',
@@ -29,32 +20,7 @@ export class CheckoutComponent {
   tipoSelecionado = signal<'VIP' | 'STANDARD' | 'MEIA'>('STANDARD');
   proximoId = signal<number>(4);
 
-  ingressos = signal<Ingresso[]>([
-    {
-      id: 1,
-      nome: 'Angular Conf 2026',
-      tipo: 'VIP',
-      data: new Date('2026-09-15'),
-      preco: 150,
-      descricao: DESCRICOES['VIP'],
-    },
-    {
-      id: 2,
-      nome: 'Angular Conf 2026',
-      tipo: 'STANDARD',
-      data: new Date('2026-09-15'),
-      preco: 100,
-      descricao: DESCRICOES['STANDARD'],
-    },
-    {
-      id: 3,
-      nome: 'Angular Conf 2026',
-      tipo: 'MEIA',
-      data: new Date('2026-09-15'),
-      preco: 50,
-      descricao: DESCRICOES['MEIA'],
-    },
-  ]);
+  ingressos = signal<Ingresso[]>(mockIngressos);
 
   totalBruto = computed(() =>
     this.ingressos().reduce((acc, i) => acc + i.preco, 0)
