@@ -232,3 +232,243 @@
     .btn-arrow {
       font-size: 18px;
     }
+
+.coupon-input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,200,0,0.2);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      padding: 10px 48px 10px 14px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+app-card {
+  .card {
+    background: #0d0d0d;
+    border: 1px solid rgba(255, 200, 0, 0.15);
+    border-radius: 16px;
+    padding: 28px;
+
+    h2 {
+      font-family: 'Georgia', serif;
+      font-size: 14px;
+      color: #ffc800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      border-bottom: 1px solid rgba(255, 200, 0, 0.15);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+  }
+}
+
+.ingresso-item {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.02);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  &__nome {
+    font-size: 13px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  &__data {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.35);
+    letter-spacing: 0.5px;
+  }
+
+  &__badge-row {
+    margin-bottom: 8px;
+  }
+
+  &__descricao {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.4);
+    line-height: 1.5;
+    margin-bottom: 8px;
+  }
+
+  &__preco {
+    text-align: right;
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffc800;
+  }
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+  &--vip {
+    background: rgba(255, 200, 0, 0.12);
+    color: #ffc800;
+    border: 1px solid rgba(255, 200, 0, 0.3);
+  }
+
+  &--meia {
+    background: rgba(76, 175, 80, 0.1);
+    color: #66bb6a;
+    border: 1px solid rgba(76, 175, 80, 0.25);
+  }
+
+  &--standard {
+    background: rgba(100, 181, 246, 0.1);
+    color: #64b5f6;
+    border: 1px solid rgba(100, 181, 246, 0.25);
+  }
+}
+
+.brinde-banner {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 200, 0, 0.07);
+  border: 1px solid rgba(255, 200, 0, 0.2);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffc800;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.carrinho-vazio {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.25);
+  text-align: center;
+  font-style: italic;
+  padding: 16px 0;
+}
+
+.desconto-tag {
+  display: block;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'Courier New', monospace;
+  margin-top: 4px;
+}
+
+.adicionar-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tipo-select {
+  background: #111;
+  border: 1px solid rgba(255, 200, 0, 0.25);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  padding: 12px 14px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  padding-right: 36px;
+
+  &:focus {
+    border-color: rgba(255, 200, 0, 0.5);
+    box-shadow: 0 0 0 2px rgba(255, 200, 0, 0.08);
+  }
+
+  option {
+    background: #111;
+    color: #fff;
+  }
+}
+
+.add-btn {
+  background: rgba(255, 200, 0, 0.1);
+  border: 1px solid rgba(255, 200, 0, 0.3);
+  border-radius: 8px;
+  color: #ffc800;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 200, 0, 0.18);
+    border-color: rgba(255, 200, 0, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.ingresso-item__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.remover-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 60, 60, 0.3);
+  border-radius: 6px;
+  color: rgba(255, 100, 100, 0.7);
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 60, 60, 0.08);
+    border-color: rgba(255, 60, 60, 0.5);
+    color: #ff6666;
+  }
+
+  &:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+}
+
+.summary-empty {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.2);
+  text-align: center;
+  font-style: italic;
+}
+
+.discount-label {
+  color: rgba(100, 200, 100, 0.7) !important;
+}
+
+.discount-value {
+  color: rgba(100, 200, 100, 0.9) !important;
+}

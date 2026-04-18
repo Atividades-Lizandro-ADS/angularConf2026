@@ -1,48 +1,138 @@
 <div class="checkout-page">
-    <div class="bg-grid"></div>
-    <div class="bg-glow"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-glow"></div>
 
-    <header class="page-header">
-        <div class="header-inner">
-            <div class="logo-mark">◈</div>
-            <div class="header-text">
-                <div class="header-topping">Checkout · Ingresso VIP</div>
-                <h1 class="header-title">Confirme seu pedido</h1>
-            </div>
+  <header class="page-header">
+    <div class="header-inner">
+      <div class="logo-mark">◈</div>
+      <div class="header-text">
+        <div class="header-topping">Checkout · Angular Conf 2026</div>
+        <h1 class="header-title">Confirme seu pedido</h1>
+      </div>
+    </div>
+  </header>
+
+  <main class="checkout-content">
+
+    <div class="left-col">
+
+      <app-card titulo="Adicionar Ingresso">
+        <div class="adicionar-form">
+          <select class="tipo-select" (change)="onTipoChange($event)">
+            <option value="STANDARD">Padrão — R$ 100,00</option>
+            <option value="VIP">VIP — R$ 150,00</option>
+            <option value="MEIA">Meia-Entrada — R$ 50,00</option>
+          </select>
+          <button class="add-btn" (click)="adicionarIngresso()" [disabled]="ehCancelado()">
+            + Adicionar ao carrinho
+          </button>
         </div>
-    </header>
+      </app-card>
 
-    <main class="checkout-content">
-        <app-ticket-item-component [eventName]="'Angular Conf 2026'" [(qtd)]="qtd" (cancel)="onCancel()" (couponVal)="AplicarDesconto($event)"></app-ticket-item-component>
-
-        <div class="summary-pannel">
-            <div class="status-row" [class.status-alert]="ehCancelado()">
-                <span class="status-dot" [class.dot-alert]="ehCancelado()"></span>
-                <span class="status-text">{{ Status() }}</span>
+      <app-card titulo="Carrinho">
+        @if (ingressos().length === 0) {
+          <p class="carrinho-vazio">Seu carrinho está vazio</p>
+        } @else {
+          @for (ingresso of ingressos(); track ingresso.id) {
+            <div class="ingresso-item">
+              <div class="ingresso-item__header">
+                <span class="ingresso-item__nome">{{ ingresso.nome }}</span>
+                <span class="ingresso-item__data">
+                  {{ ingresso.data | date: 'dd/MM/yyyy' }}
+                </span>
+              </div>
+              <div class="ingresso-item__badge-row">
+                @switch (ingresso.tipo) {
+                  @case ('VIP') {
+                    <span class="badge badge--vip">VIP — Acesso Total</span>
+                  }
+                  @case ('MEIA') {
+                    <span class="badge badge--meia">MEIA — Obrigatório carteirinha</span>
+                  }
+                  @default {
+                    <span class="badge badge--standard">STANDARD — Acesso Padrão</span>
+                  }
+                }
+              </div>
+              <p class="ingresso-item__descricao">
+                {{ ingresso.descricao | resumo: 80 }}
+              </p>
+              <div class="ingresso-item__footer">
+                <span class="ingresso-item__preco">
+                  {{ ingresso.preco | currency: 'BRL' }}
+                </span>
+                <button
+                  class="remover-btn"
+                  (click)="removerIngresso(ingresso.id)"
+                  [disabled]="ehCancelado()"
+                >
+                  ✕ Remover
+                </button>
+              </div>
             </div>
-        </div>
+          }
+          @if (ingressos().length > 2) {
+            <div class="brinde-banner">
+              Parabéns, você ganhou um brinde!!!
+            </div>
+          }
+        }
+      </app-card>
 
-        <div class="summary-divider"></div>
+    </div>
 
+    <div class="summary-panel">
+
+      <div class="status-row" [class.status-alert]="ehCancelado()">
+        <span class="status-dot" [class.dot-alert]="ehCancelado()"></span>
+        <span class="status-text">{{ Status() }}</span>
+      </div>
+
+      <div class="summary-divider"></div>
+      <input
+            class="coupon-input"
+            type="text"
+            placeholder="Cupom de Desconto"
+            (keydown.enter)="AplicarDesconto(+$any($event).target.value)"
+          />
+
+      @for (ingresso of ingressos(); track ingresso.id) {
         <div class="summary-row">
-            <span class="summary-label">Ingressos</span>
-            <span class="summary-detail">{{ qtd() }} × R$ 150,00</span>
+          <span class="summary-label">{{ ingresso.tipo }}</span>
+          <span class="summary-detail">{{ ingresso.preco | currency: 'BRL' }}</span>
         </div>
+      }
 
-        <div class="summary-total-row">
-            <span class="summary-total-label">Total</span>
-            <span class="summary-total-value">
-              R$ {{ (qtd() * 150-desconto()).toFixed(2).replace('.', ',') }} 
-              @if(desconto()>0){
-                (desconto de: R$ {{desconto().toFixed(2).replace('.', ',')}})
-              }
-            </span>
+      @if (ingressos().length === 0) {
+        <p class="summary-empty">Nenhum ingresso</p>
+      }
+
+      <div class="summary-divider"></div>
+
+      @if (desconto() > 0) {
+        <div class="summary-row">
+          <span class="summary-label">Subtotal</span>
+          <span class="summary-detail">{{ totalBruto() | currency: 'BRL' }}</span>
         </div>
+        <div class="summary-row">
+          <span class="summary-label discount-label">Desconto</span>
+          <span class="summary-detail discount-value">- {{ desconto() | currency: 'BRL' }}</span>
+        </div>
+      }
 
-        <button class="checkout-btn" [disabled]="ehCancelado()">
-            <span>{{ ehCancelado() ? 'Compra cancelada' : 'Finalizar compra' }}</span>
-            <span class="btn-arrow">{{ ehCancelado() ? '✕' : '→' }}</span>
-        </button>
-        
-    </main>
+      <div class="summary-total-row">
+        <span class="summary-total-label">Total</span>
+        <span class="summary-total-value">
+          {{ totalFinal() | currency: 'BRL' }}
+        </span>
+      </div>
+
+      <button class="checkout-btn" [disabled]="ehCancelado() || ingressos().length === 0">
+        <span>{{ ehCancelado() ? 'Compra cancelada' : 'Finalizar compra' }}</span>
+        <span class="btn-arrow">{{ ehCancelado() ? '✕' : '→' }}</span>
+      </button>
+
+    </div>
+
+  </main>
 </div>

@@ -1,36 +1,120 @@
-import { Component, signal } from '@angular/core';
-import { TicketItemComponent } from '../ticket-item-component/ticket-item-component';
-import { CommonModule } from '@angular/common';
+import { Component, signal, computed } from '@angular/core';
+import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
+import { Ingresso } from '../../interfaces/ingresso';
+import { ResumoPipePipe } from '../../pipes/resumo-pipe-pipe';
+import { CardComponent } from '../card-component/card-component';
+
+const PRECOS: Record<string, number> = {
+  VIP: 150,
+  STANDARD: 100,
+  MEIA: 50,
+};
+
+const DESCRICOES: Record<string, string> = {
+  VIP: 'Acesso completo a todos os palcos, área VIP exclusiva, coffee break premium, kit de boas-vindas e networking com palestrantes renomados.',
+  STANDARD: 'Acesso ao palco principal e secundário, coffee break incluso e certificado de participação digital.',
+  MEIA: 'Benefício para estudantes e professores. Apresentação de carteirinha válida obrigatória na entrada do evento.',
+};
 
 @Component({
   selector: 'app-checkout-component',
   standalone: true,
-  imports: [CommonModule,TicketItemComponent],
+  imports: [CommonModule, CardComponent, ResumoPipePipe, DatePipe, CurrencyPipe],
   templateUrl: './checkout-component.html',
   styleUrl: './checkout-component.scss',
 })
 export class CheckoutComponent {
-  qtd = signal<number>(1);
-  Status=signal<string>('Aguardando Finalização');
-  desconto= signal<number>(0);
+  Status = signal<string>('Aguardando Finalização');
+  desconto = signal<number>(0);
+  tipoSelecionado = signal<'VIP' | 'STANDARD' | 'MEIA'>('STANDARD');
+  proximoId = signal<number>(4);
 
-  ehCancelado(): boolean{
-    return this.Status().toLowerCase().includes('cancelamento');    
+  ingressos = signal<Ingresso[]>([
+    {
+      id: 1,
+      nome: 'Angular Conf 2026',
+      tipo: 'VIP',
+      data: new Date('2026-09-15'),
+      preco: 150,
+      descricao: DESCRICOES['VIP'],
+    },
+    {
+      id: 2,
+      nome: 'Angular Conf 2026',
+      tipo: 'STANDARD',
+      data: new Date('2026-09-15'),
+      preco: 100,
+      descricao: DESCRICOES['STANDARD'],
+    },
+    {
+      id: 3,
+      nome: 'Angular Conf 2026',
+      tipo: 'MEIA',
+      data: new Date('2026-09-15'),
+      preco: 50,
+      descricao: DESCRICOES['MEIA'],
+    },
+  ]);
+
+  totalBruto = computed(() =>
+    this.ingressos().reduce((acc, i) => acc + i.preco, 0)
+  );
+
+  totalFinal = computed(() => {
+    const total = this.totalBruto() - this.desconto();
+    return total < 0 ? 0 : total;
+  });
+
+  ehCancelado(): boolean {
+    return this.Status().toLowerCase().includes('cancelamento');
   }
 
-  onCancel(): void{
+  onCancel(): void {
     this.Status.set('O usuário efetuou o cancelamento da compra.');
   }
 
-  AplicarDesconto(valor: number): void{
-    const totalAtual = this.qtd()*150;
-    const totalDesconto = totalAtual - valor;
+  adicionarIngresso(): void {
+    const tipo = this.tipoSelecionado();
+    const novoIngresso: Ingresso = {
+      id: this.proximoId(),
+      nome: 'Angular Conf 2026',
+      tipo,
+      data: new Date('2026-09-15'),
+      preco: PRECOS[tipo],
+      descricao: DESCRICOES[tipo],
+    };
+    this.ingressos.update((lista) => [...lista, novoIngresso]);
+    this.proximoId.update((id) => id + 1);
+    this.revalidarDesconto();
+  }
 
-    if(totalDesconto >= 100){
+  removerIngresso(id: number): void {
+    this.ingressos.update((lista) => lista.filter((i) => i.id !== id));
+    this.revalidarDesconto();
+  }
+
+  AplicarDesconto(valor: number): void {
+    const totalAtual = this.totalBruto();
+    const totalDesconto = totalAtual - valor;
+    if (totalDesconto >= 50 ) {
       this.desconto.set(valor);
-    }else{
-      this.desconto.set(totalAtual - 100);
-      alert('Desconto limitado. O valor mínimo do pedido é R$ 100,00');
     }
+    
+    else {
+      this.desconto.set(totalAtual - 50);
+      alert('Desconto limitado. O valor mínimo do pedido é R$ 50,00');
+    }
+  }
+
+  private revalidarDesconto(): void {
+    const descAtual = this.desconto();
+    if (descAtual > 0) {
+      this.AplicarDesconto(descAtual);
+    }
+  }
+
+  onTipoChange(event: Event): void {
+    const valor = (event.target as HTMLSelectElement).value as 'VIP' | 'STANDARD' | 'MEIA';
+    this.tipoSelecionado.set(valor);
   }
 }
